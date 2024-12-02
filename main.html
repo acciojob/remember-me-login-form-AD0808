@@ -1,28 +1,82 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="styles.css" />
-  <title>login form</title>
+    <title>Login Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 300px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        input {
+            width: 100%;
+            margin: 10px 0;
+            padding: 5px;
+        }
+        #existing {
+            display: none;
+            width: 100%;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-  <h1>Login Form</h1>
-  <form id="loginForm">
-    <div>
-      <input type="text" id="username" placeholder="Username" required />
-    </div>
-    <div>
-      <input type="password" id="password" placeholder="Password" required />
-    </div>
-    <div>
-      <input type="checkbox" id="checkbox" />
-      <label for="checkbox">Remember me</label>
-    </div>
-    <div>
-      <input type="submit" id="submit" value="Submit" />
-    </div>
-  </form>
-  <button id="existing" style="display: none;">Login as existing user</button>
+    <h1>Login Form</h1>
+    <form id="loginForm">
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <label>
+            <input type="checkbox" id="checkbox"> Remember me
+        </label>
+        <input type="submit" id="submit" value="Submit">
+    </form>
+    <button id="existing">Login as existing user</button>
 
-  <script src="./script.js"></script>
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const checkboxInput = document.getElementById('checkbox');
+        const existingButton = document.getElementById('existing');
+
+        // Check for existing saved credentials on page load
+        window.addEventListener('load', () => {
+            const savedUsername = localStorage.getItem('rememberedUsername');
+            const savedPassword = localStorage.getItem('rememberedPassword');
+            
+            if (savedUsername && savedPassword) {
+                existingButton.style.display = 'block';
+            }
+        });
+
+        // Handle form submission
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const username = usernameInput.value;
+            const password = passwordInput.value;
+
+            if (checkboxInput.checked) {
+                // Save credentials to local storage
+                localStorage.setItem('rememberedUsername', username);
+                localStorage.setItem('rememberedPassword', password);
+                existingButton.style.display = 'block';
+            } else {
+                // Remove credentials from local storage
+                localStorage.removeItem('rememberedUsername');
+                localStorage.removeItem('rememberedPassword');
+                existingButton.style.display = 'none';
+            }
+
+            alert(`Logged in as ${username}`);
+        });
+
+        // Handle existing user login
+        existingButton.addEventListener('click', () => {
+            const savedUsername = localStorage.getItem('rememberedUsername');
+            alert(`Logged in as ${savedUsername}`);
+        });
+    </script>
 </body>
 </html>
